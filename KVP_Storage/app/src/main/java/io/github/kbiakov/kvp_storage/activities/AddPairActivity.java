@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.github.kbiakov.kvp_storage.R;
-import io.github.kbiakov.kvp_storage.models.PairEntity;
 import io.github.kbiakov.kvp_storage.storage.Storage;
 import io.github.kbiakov.kvp_storage.storage.StoreType;
 import io.github.kbiakov.kvp_storage.storage.ValueTypeException;
@@ -50,7 +49,7 @@ public class AddPairActivity extends AppCompatActivity {
                 if (!key.equals("")) {
                     if (!value.equals("")) {
                         try {
-                            Storage.getInstance().putKVPair(key, value, type);
+                            Storage.getInstance().putPairToStorage(key, value, type);
 
                             uiInputKeyWrapper.setErrorEnabled(false);
                             uiInputValueWrapper.setErrorEnabled(false);

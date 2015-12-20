@@ -11,37 +11,41 @@ import io.github.kbiakov.kvp_storage.models.PairEntity;
  */
 public class Storage {
 
+    // On Demand Holder singleton
     public static class SingletonHolder {
         public static final Storage HOLDER_INSTANCE = new Storage();
     }
 
+    /**
+     * Get singleton instance of storage
+     *
+     * @return Storage
+     */
     public static Storage getInstance() {
         return SingletonHolder.HOLDER_INSTANCE;
     }
 
+    // Static initialization block for library loading
     static {
         System.loadLibrary("io_github_kbiakov_Storage");
     }
 
+    // Temp. pair entities
     private ArrayList<PairEntity> mPairEntities;
 
+    // Main constructor
     public Storage() {
         this.mPairEntities = new ArrayList<>();
     }
 
-    public native boolean getBoolean(String key);
-    public native void putBoolean(String key, boolean value);
-
-    public native int getInteger(String key);
-    public native void putInteger(String key, int value);
-
-    public native float getFloat(String key);
-    public native void putFloat(String key, float value);
-
-    public native String getString(String key);
-    public native void putString(String key, String value);
-
-    public void putKVPair(String key, String value, StoreType type) throws ValueTypeException{
+    /**
+     * Put KV-pair to storage
+     * @param key
+     * @param value
+     * @param type
+     * @throws ValueTypeException Throws if value type does not match the specified type
+     */
+    public void putPairToStorage(String key, String value, StoreType type) throws ValueTypeException{
         switch (type) {
             case Boolean:
                 if (value.equals("true") || value.equals("false")) {
@@ -74,6 +78,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Get stored KV-pair entities from storage
+     * @return Stored pair entities
+     */
     public ArrayList<PairEntity> getStoredPairEntities() {
         ArrayList<PairEntity> storedPairEntities = new ArrayList<>();
 
@@ -93,7 +101,7 @@ public class Storage {
                     value = String.valueOf(getFloat(key));
                     break;
                 case String: default:
-                    value = getString(p.getKey());
+                    value = getString(key);
                     break;
             }
             storedPairEntities.add(new PairEntity(key, value, type));
@@ -101,4 +109,18 @@ public class Storage {
 
         return storedPairEntities;
     }
+
+    // Main JNI-methods (put & get) for storage
+
+    private native boolean getBoolean(String key);
+    private native void putBoolean(String key, boolean value);
+
+    private native int getInteger(String key);
+    private native void putInteger(String key, int value);
+
+    private native float getFloat(String key);
+    private native void putFloat(String key, float value);
+
+    private native String getString(String key);
+    private native void putString(String key, String value);
 }
