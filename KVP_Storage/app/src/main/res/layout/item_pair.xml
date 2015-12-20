@@ -7,23 +7,26 @@
     android:padding="8dp">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
+        android:textStyle="italic"
+        android:id="@+id/uiLabelType"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_weight="3"
+        android:textColor="@android:color/black"
         android:id="@+id/uiLabelKey"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_weight="1"
+        android:layout_weight="3"
+        android:textColor="@android:color/black"
         android:id="@+id/uiLabelValue"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_weight="1"
-        android:id="@+id/uiLabelType"/>
 
 </LinearLayout>
