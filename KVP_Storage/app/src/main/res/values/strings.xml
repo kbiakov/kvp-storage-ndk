@@ -4,7 +4,7 @@
 
     <string name="label_key">Key</string>
     <string name="label_value">Value</string>
-    <string name="label_type">TYPE</string>
+    <string name="label_type">Type</string>
     <string name="label_add">Add to storage</string>
 
     <string name="error_null_key">Null key!</string>

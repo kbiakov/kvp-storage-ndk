@@ -10,13 +10,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.github.kbiakov.kvp_storage.R;
+import io.github.kbiakov.kvp_storage.adapters.PairAdapter;
+import io.github.kbiakov.kvp_storage.models.PairEntity;
+import io.github.kbiakov.kvp_storage.storage.Storage;
 
 public class StorageActivity extends AppCompatActivity {
 
     @Bind(R.id.uiListPairs) ListView uiListPairs;
+
+    private static final int REQ_ADD_PAIR = 0;
+
+    private ArrayList<PairEntity> mPairEntities;
+    private PairAdapter mPairAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +36,16 @@ public class StorageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
 
+        mPairEntities = Storage.getInstance().getStoredPairEntities();
+        mPairAdapter = new PairAdapter(this, mPairEntities);
+        uiListPairs.setAdapter(mPairAdapter);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(StorageActivity.this, AddPairActivity.class));
+                Intent i =new Intent(StorageActivity.this, AddPairActivity.class);
+                startActivityForResult(i, REQ_ADD_PAIR);
             }
         });
     }
@@ -55,5 +70,17 @@ public class StorageActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == REQ_ADD_PAIR &&
+                data.getBooleanExtra(AddPairActivity.EXTRA_ADDED_NEW, false)) {
+            mPairEntities.clear();
+            mPairEntities.addAll(Storage.getInstance().getStoredPairEntities());
+            mPairAdapter.notifyDataSetChanged();
+        }
     }
 }
