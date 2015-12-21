@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,7 +17,7 @@ import butterknife.ButterKnife;
 import io.github.kbiakov.kvp_storage.R;
 import io.github.kbiakov.kvp_storage.storage.Storage;
 import io.github.kbiakov.kvp_storage.storage.StoreType;
-import io.github.kbiakov.kvp_storage.storage.ValueTypeException;
+import io.github.kbiakov.kvp_storage.storage.exceptions.ValueTypeException;
 
 public class AddPairActivity extends AppCompatActivity {
 
@@ -31,6 +32,8 @@ public class AddPairActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_pair);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.add_kv_pair);
         ButterKnife.bind(this);
 
         uiInputKeyWrapper.setOnTouchListener(resetInputListener);
@@ -88,4 +91,15 @@ public class AddPairActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                setResult(Activity.RESULT_CANCELED);
+                finish();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

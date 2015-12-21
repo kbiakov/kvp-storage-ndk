@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">KVP Storage</string>
     <string name="action_settings">Settings</string>
+    <string name="add_kv_pair">Add KV-pair</string>
 
     <string name="label_key">Key</string>
     <string name="label_value">Value</string>
@@ -10,4 +11,7 @@
     <string name="error_null_key">Null key!</string>
     <string name="error_null_value">Null value!</string>
     <string name="error_invalid_type">Invalid type!</string>
+
+    <string name="error_title">Error!</string>
+    <string name="error_storage_reading">Something went wrong while read from storage.</string>
 </resources>

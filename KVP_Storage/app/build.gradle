@@ -28,7 +28,6 @@ model {
             minifyEnabled = false
             proguardFiles += file('proguard-rules.txt')
         }
-
     }
     android.productFlavors {
         // for detailed abiFilter descriptions, refer to "Supported ABIs" @

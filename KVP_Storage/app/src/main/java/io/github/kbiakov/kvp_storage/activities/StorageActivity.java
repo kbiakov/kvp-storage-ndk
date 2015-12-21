@@ -3,6 +3,7 @@ package io.github.kbiakov.kvp_storage.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,6 +19,8 @@ import io.github.kbiakov.kvp_storage.R;
 import io.github.kbiakov.kvp_storage.adapters.PairAdapter;
 import io.github.kbiakov.kvp_storage.models.PairEntity;
 import io.github.kbiakov.kvp_storage.storage.Storage;
+import io.github.kbiakov.kvp_storage.storage.exceptions.KeyNotFoundException;
+import io.github.kbiakov.kvp_storage.storage.exceptions.ValueTypeException;
 
 public class StorageActivity extends AppCompatActivity {
 
@@ -36,7 +39,13 @@ public class StorageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
 
-        mPairEntities = Storage.getInstance().getStoredPairEntities();
+        try {
+            mPairEntities = Storage.getInstance().getStoredPairEntities();
+        } catch (KeyNotFoundException | ValueTypeException e) {
+            mPairEntities = new ArrayList<>();
+            showReadingError();
+        }
+
         mPairAdapter = new PairAdapter(this, mPairEntities);
         uiListPairs.setAdapter(mPairAdapter);
 
@@ -44,7 +53,7 @@ public class StorageActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i =new Intent(StorageActivity.this, AddPairActivity.class);
+                Intent i = new Intent(StorageActivity.this, AddPairActivity.class);
                 startActivityForResult(i, REQ_ADD_PAIR);
             }
         });
@@ -78,9 +87,28 @@ public class StorageActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && requestCode == REQ_ADD_PAIR &&
                 data.getBooleanExtra(AddPairActivity.EXTRA_ADDED_NEW, false)) {
-            mPairEntities.clear();
-            mPairEntities.addAll(Storage.getInstance().getStoredPairEntities());
-            mPairAdapter.notifyDataSetChanged();
+
+            try {
+                ArrayList<PairEntity> storedPairEntities =
+                        Storage.getInstance().getStoredPairEntities();
+
+                mPairEntities.clear();
+                mPairEntities.addAll(storedPairEntities);
+                mPairAdapter.notifyDataSetChanged();
+            } catch (KeyNotFoundException | ValueTypeException e) {
+                showReadingError();
+            }
         }
+    }
+
+    /**
+     * Show error when something went wrong while read from storage
+     */
+    private void showReadingError() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.error_title)
+                .setMessage(R.string.error_storage_reading)
+                .create()
+                .show();
     }
 }

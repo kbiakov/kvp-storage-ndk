@@ -3,6 +3,8 @@ package io.github.kbiakov.kvp_storage.storage;
 import java.util.ArrayList;
 
 import io.github.kbiakov.kvp_storage.models.PairEntity;
+import io.github.kbiakov.kvp_storage.storage.exceptions.KeyNotFoundException;
+import io.github.kbiakov.kvp_storage.storage.exceptions.ValueTypeException;
 
 /**
  * @class Storage
@@ -11,7 +13,7 @@ import io.github.kbiakov.kvp_storage.models.PairEntity;
  */
 public class Storage {
 
-    // On Demand Holder singleton
+    // On Demand Holder idiom singleton
     public static class SingletonHolder {
         public static final Storage HOLDER_INSTANCE = new Storage();
     }
@@ -40,6 +42,7 @@ public class Storage {
 
     /**
      * Put KV-pair to storage
+     *
      * @param key
      * @param value
      * @param type
@@ -80,9 +83,12 @@ public class Storage {
 
     /**
      * Get stored KV-pair entities from storage
+     *
      * @return Stored pair entities
      */
-    public ArrayList<PairEntity> getStoredPairEntities() {
+    public ArrayList<PairEntity> getStoredPairEntities()
+            throws KeyNotFoundException, ValueTypeException {
+
         ArrayList<PairEntity> storedPairEntities = new ArrayList<>();
 
         for (PairEntity p: mPairEntities) {
@@ -112,15 +118,20 @@ public class Storage {
 
     // Main JNI-methods (put & get) for storage
 
-    private native boolean getBoolean(String key);
     private native void putBoolean(String key, boolean value);
-
-    private native int getInteger(String key);
     private native void putInteger(String key, int value);
-
-    private native float getFloat(String key);
     private native void putFloat(String key, float value);
-
-    private native String getString(String key);
     private native void putString(String key, String value);
+
+    private native boolean getBoolean(String key) throws
+            KeyNotFoundException, ValueTypeException;
+
+    private native int getInteger(String key) throws
+            KeyNotFoundException, ValueTypeException;
+
+    private native float getFloat(String key) throws
+            KeyNotFoundException, ValueTypeException;
+
+    private native String getString(String key) throws
+            KeyNotFoundException, ValueTypeException;
 }
