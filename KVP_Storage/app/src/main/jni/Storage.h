@@ -30,7 +30,7 @@ typedef struct {
 // STStorage: All stored KV-pairs
 typedef struct {
     STEntity mEntities[ST_CAPACITY];
-    int8_t mLength;
+    int mLength;
 } STStorage;
 
 // Main functions
